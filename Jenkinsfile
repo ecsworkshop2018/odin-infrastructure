@@ -2,7 +2,7 @@ pipeline {
     agent none
     options { skipDefaultCheckout() }
     environment {
-        TERRAFORM_DIR = "${WORKSPACE}"
+        TERRAFORM_DIR = "."
     }
     stages {
         stage('checkout') {
