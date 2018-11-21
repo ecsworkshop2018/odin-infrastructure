@@ -14,7 +14,7 @@ pipeline {
         stage('plan') {
             agent { label 'master' }
             steps {
-                dir("${TERRAFORM_DIR}") {
+                //dir("${TERRAFORM_DIR}") {
                     script {
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
                             setupPythonVirtualEnv()
@@ -23,8 +23,9 @@ pipeline {
                             sh 'TF_IN_AUTOMATION=true terraform plan -out terraform.tfplan -input=false'
                         }
                     }
-                }
-                stash includes: "${TERRAFORM_DIR}/terraform.tfplan", name: "terraform-plan"
+                //}
+                //stash includes: "${TERRAFORM_DIR}/terraform.tfplan", name: "terraform-plan"
+                stash includes: "terraform.tfplan", name: "terraform-plan"
             }
         }
         stage('approve-plan') {
@@ -41,15 +42,15 @@ pipeline {
         stage('apply') {
             agent { label 'master' }
             steps {
-                dir("${TERRAFORM_DIR}") {
+                //dir("${TERRAFORM_DIR}") {
                     unstash "terraform-plan"
                     script {
                         wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                            sh "TF_LOG=DEBUG TF_LOG_PATH=terraform_apply_logs TF_IN_AUTOMATION=true terraform apply -input=false ${TERRAFORM_DIR}/terraform.tfplan"
+                            sh "TF_LOG=DEBUG TF_LOG_PATH=terraform_apply_logs TF_IN_AUTOMATION=true terraform apply -input=false terraform.tfplan"
                             archiveArtifacts 'terraform_apply_logs'
                         }
                     }
-                }
+                //}
             }
         }
     }
