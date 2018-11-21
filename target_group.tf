@@ -46,7 +46,7 @@ resource "aws_alb_listener_rule" "alb_odin_listener_rule" {
   }
   "condition" {
     field = "path-pattern"
-    values = ["/odin/*", "/odin"]
+    values = ["/odin/*"]
   }
   listener_arn = "${data.aws_alb_listener.alb_ssh_listener.arn}"
 }
