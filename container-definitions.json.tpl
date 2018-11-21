@@ -2,7 +2,7 @@
   {
     "name": "${service_name}",
     "image": "${docker_image}",
-    "memory": 512,
+    "memory": 256,
     "cpu": 256,
     "essential": true,
     "portMappings": [
