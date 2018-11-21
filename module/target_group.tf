@@ -1,12 +1,12 @@
 data "aws_vpc" "vpc" {
   filter {
     name = "tag:Name"
-    values = ["dev-ecs-workshop"]
+    values = ["${var.vpc_name}"]
   }
 }
 
 resource "aws_alb_target_group" "alb_odin_target_group" {
-  name = "${local.unique_id}-odin-tg"
+  name = "${var.unique_id}-${var.target_group_name}"
   port = 80
   protocol = "HTTP"
   vpc_id = "${data.aws_vpc.vpc.id}"
@@ -14,12 +14,12 @@ resource "aws_alb_target_group" "alb_odin_target_group" {
   deregistration_delay = 30
 
   tags {
-    Name = "${local.unique_id}-odin-tg"
+    Name = "${var.unique_id}-${var.target_group_name}"
   }
 
   health_check {
     protocol            = "HTTP"
-    path                = "/odin/actuator/health"
+    path                = "${var.health_check_endpoint}"
     matcher             = "200"
     interval            = "10"
     timeout             = "5"
@@ -29,15 +29,13 @@ resource "aws_alb_target_group" "alb_odin_target_group" {
 }
 
 data "aws_alb" "alb" {
-  name = "${local.unique_id}-asgard-alb"
+  name = "${var.alb_name}"
 }
-
 
 data "aws_alb_listener" "alb_ssh_listener" {
   load_balancer_arn = "${data.aws_alb.alb.arn}"
   port              = 443
 }
-
 
 resource "aws_alb_listener_rule" "alb_odin_listener_rule" {
   "action" {
@@ -46,8 +44,7 @@ resource "aws_alb_listener_rule" "alb_odin_listener_rule" {
   }
   "condition" {
     field = "path-pattern"
-    values = ["/odin/*"]
+    values = ["${var.alb_path_pattern}"]
   }
   listener_arn = "${data.aws_alb_listener.alb_ssh_listener.arn}"
 }
-
