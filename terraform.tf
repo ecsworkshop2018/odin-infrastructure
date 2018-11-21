@@ -9,3 +9,16 @@ terraform {
     region = "us-east-1"
   }
 }
+
+provider "aws" {
+  region = "${local.region}"
+  version = "~> 1.46"
+}
+
+provider "template" {
+  version = "~> 1.0"
+}
+
+locals {
+  unique_id = "ecs-workshop"
+}
