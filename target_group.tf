@@ -19,7 +19,7 @@ resource "aws_alb_target_group" "alb_odin_target_group" {
 
   health_check {
     protocol            = "HTTP"
-    path                = "/actuator/health"
+    path                = "/odin/actuator/health"
     matcher             = "200"
     interval            = "10"
     timeout             = "5"
@@ -46,7 +46,7 @@ resource "aws_alb_listener_rule" "alb_odin_listener_rule" {
   }
   "condition" {
     field = "path-pattern"
-    values = ["/odin/*"]
+    values = ["/odin/*", "/odin"]
   }
   listener_arn = "${data.aws_alb_listener.alb_ssh_listener.arn}"
 }
