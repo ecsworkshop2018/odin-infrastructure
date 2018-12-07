@@ -2,3 +2,4 @@
 .idea
 .terraform
 tf_plan
+tfplan

@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket = "ecs-workshop-terraform-state-dev"
-    key = "ecs-workspace-odin-service-dev.tfstate"
+    key = "${unique}-odin-service-dev.tfstate"
     dynamodb_table = "Terraform-Lock-Table"
     encrypt = true
     region = "us-east-1"
@@ -20,5 +20,5 @@ provider "template" {
 }
 
 locals {
-  unique_id = "ecs-workshop"
+
 }
